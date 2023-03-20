@@ -1,9 +1,17 @@
+using WebAPIApplication.Security;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
+// Add services to the container.
+IConfigurationRoot configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: false).Build();
+
+builder.Services.AddAppSettingsModule(configuration);
+builder.Services.AddSecurityModule();
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,10 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseApplicationSecurity();
 
 app.MapControllers();
 
